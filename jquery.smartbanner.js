@@ -118,11 +118,17 @@
             e.preventDefault()
             this.hide()
             this.setCookie('sb-closed','true',this.options.daysHidden);
+            if (this.options.onClose) {
+                this.options.onClose();   
+            }
         }
        
       , install: function(e) {
             this.hide()
-            this.setCookie('sb-installed','true',this.options.daysReminder)
+            this.setCookie('sb-installed','true',this.options.daysReminder);
+            if (this.options.onInstall) {
+                this.options.onInstall();
+            }
         }
        
       , setCookie: function(name, value, exdays) {
@@ -163,9 +169,9 @@
 
     $.smartbanner = function(option) {
         var $window = $(window)
-        , data = $window.data('smartbanner')
+        , data = $window.data('typeahead')
         , options = typeof option == 'object' && option
-      if (!data) $window.data('smartbanner', (data = new SmartBanner(options)))
+      if (!data) $window.data('typeahead', (data = new SmartBanner(options)))
       if (typeof option == 'string') data[option]()
     }
     
@@ -186,7 +192,9 @@
         speedOut: 400, // Close animation speed of the banner
         daysHidden: 15, // Duration to hide the banner after being closed (0 = always show banner)
         daysReminder: 90, // Duration to hide the banner after "VIEW" is clicked *separate from when the close button is clicked* (0 = always show banner)
-        force: null // Choose 'ios' or 'android'. Don't do a browser check, just always show this banner
+        force: null, // Choose 'ios' or 'android'. Don't do a browser check, just always show this banner
+        onInstall: null, //Callback that is executed when user chooses "View"
+        onClose: null //Callback that is executed when user closes banner
     }
     
     $.smartbanner.Constructor = SmartBanner;
